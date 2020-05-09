@@ -1,37 +1,33 @@
 <?php
 
-if (!file_exists("webbork.cfg")) {
-	exit("<h1>Bork!</h1><hr><p>This website has not been configured</p>");
+if ( ! file_exists( "webbork.cfg" ) ) {
+	exit( "<h1>Bork!</h1><hr><p>This website has not been configured</p>" );
 }
 
 try {
 
-	$CFG = file_get_contents("webbork.cfg");
+	$CFG = file_get_contents( "webbork.cfg" );
 
-	$CFG = unserialize($CFG);
-
-	foreach (glob("wb/*.php") as $filename)
-	{
+	foreach ( glob( "wb/*.php" ) as $filename ) {
 		include $filename;
 	}
 
-	foreach (glob("wb/lib/*.php") as $filename)
-	{
+	foreach ( glob( "wb/lib/*.php" ) as $filename ) {
 		include $filename;
 	}
 
 
-	$WB = new WebBork($CFG);
+	$WB = new WebBork( $CFG );
 
-	if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+	if ( ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest' ) {
 
-		exit($WB->handle());
+		exit( $WB->handle() );
 
 	}
 
-	exit($WB->page);
+	exit( $WB->page() );
 
-} catch (\Exception $e) {
+} catch ( \Exception $e ) {
 
 
 }
