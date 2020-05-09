@@ -1,0 +1,30 @@
+# Main configuration file
+
+title=my website
+mode=online
+
+
+/
+    load "homepage.bork"
+
+/test
+    load "test.bork"
+
+# load a php page?
+/phptest
+    load "phptest.php"
+
+/something
+    .html
+    <h1>.code()</h1>
+
+    .code
+    return "@author was here"
+
+    .data
+    author="Erik"
+    .
+
+
+
+

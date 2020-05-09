@@ -1,12 +1,12 @@
 <?php
 
-if ( ! file_exists( "webbork.cfg" ) ) {
+if ( ! file_exists( "webbork.cnf" ) ) {
 	exit( "<h1>Bork!</h1><hr><p>This website has not been configured</p>" );
 }
 
 try {
 
-	$CFG = file_get_contents( "webbork.cfg" );
+	$CFG = file_get_contents( "webbork.cnf" );
 
 	foreach ( glob( "wb/*.php" ) as $filename ) {
 		include $filename;

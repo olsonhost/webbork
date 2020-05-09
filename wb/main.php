@@ -4,25 +4,31 @@ class WebBork {
 
 	protected $CFG, $URI;
 
-	public function _construct($cfg) {
+	public function __construct($cfg) {
 
 		$this->CFG = $this->prep($cfg);
 
 		$this->URI = $_SERVER['REQUEST_URI'];
 
+		if ($this->URI == '') {
+			$this->URI = '/';
+		}
+
 	}
 
 	public function prep($cfg) {
 
-		// parse thie lines in the config file to produce the $CFG object
+		// parse the lines in a cnf file to produce a $CFG object
 
-		$this->CFG = [];
+		$CFG = [];
 
 		$cfg = str_replace([chr(13), chr(10)], chr(1), $cfg);
 
 		$cfg = explode(chr(1),$cfg);
 
 		$group = 'main';
+
+		$seg = '.';
 
 		foreach ($cfg as $line) {
 
@@ -35,16 +41,35 @@ class WebBork {
 			if ($char == '#' || $char == '/') continue;
 
 			if ($char == '/') {
+				$seg = '.'; // force end .code or .html segments
 				$group = $line;
-				$this->CFG[$group] = [];
+				$CFG[$group] = [];
 				continue;
 			}
 
-			$this->CFG[$group][] = $line;
+			if ($char == '.') {
+				$group = $line;
+				$CFG[$group] = [];
+				continue;
+			}
+
+
+			if ($seg === '.') { // .code, .html, .data, etc
+
+				$CFG[ $group ][] = $line;
+
+			} else {
+
+				$CFG[ $group ][ $seg ][] = $line;
+
+			}
 		}
+		return $CFG;
 	}
 	public function error($msg) {
-		return "Error:" . $msg;
+
+		return "<h1>Bork!</h1><hr><p>Error:" . $msg . "</p><textarea>" . var_export($this->CFG, true) . "</textarea>" ;
+
 	}
 	public function handle() {
 
@@ -62,7 +87,7 @@ class WebBork {
 
 		if (!isset($this->CFG[$this->URI])) {
 
-			return $this->error("Missing Route");
+			return $this->error("Missing Route: " . $this->URI);
 
 		}
 
@@ -78,7 +103,7 @@ class WebBork {
 
 		var_dump($array);
 
-		return "Send back output!"
+		return "Send back output!";
 
 	}
 
